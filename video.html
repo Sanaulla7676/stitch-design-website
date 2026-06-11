@@ -6,6 +6,7 @@
   <title>Video Consultation | Dr. Varsha Bandi</title>
   
   <!-- Tailwind CSS & Icon Fonts -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   
@@ -60,7 +61,7 @@
   <header class="sticky top-0 z-50 glass-panel shadow-[0_4px_30px_rgba(8,107,106,0.03)] border-b border-[#086b6a]/10">
     <nav class="max-w-7xl mx-auto px-4 md:px-10 py-4 flex justify-between items-center">
       <!-- Logo -->
-      <a href="index.html" class="flex items-center gap-3 group" data-purpose="logo">
+      <a href="home.html" class="flex items-center gap-3 group" data-purpose="logo">
         <div class="relative w-11 h-11 bg-white rounded-xl shadow-inner border border-teal-100 flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-105">
           <img alt="Dr. Varsha Bandi Logo" class="h-10 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDe68SlGmD9lamoEBpSR190TzURLMwPjMI8DpPVjzNAOH-YdjfDie4SFW2hej50y7DYKuwHn3o1TJNzL3kRfgi0S1dZc7do9R_trNFYWckUechGXqL0PGj5Qfxio1ekV54UlmpC_aTifK9L_xvqWUj4uQQQt8d0ErSzWf_gBmEpqC2lLl4h-33wAaMTYm_FH1V3jO41l7bsmI7yTINm1Uax6Mxh63jtZwvgiyoAbwhAt8T-GmBqGgWHK4bHfqhXI1zkZHhOrGMXAqOm" style="object-position: 0 0; clip-path: inset(20px 850px 850px 40px); transform: scale(1.8) translate(8px, 8px);"/>
         </div>
@@ -72,7 +73,7 @@
       
       <!-- Desktop Nav Menu Links -->
       <div class="hidden lg:flex items-center gap-8">
-        <a class="text-gray-600 dark:text-gray-300 hover:text-teal-primary dark:hover:text-teal-400 font-semibold text-sm transition" href="index.html">Home</a>
+        <a class="text-gray-600 dark:text-gray-300 hover:text-teal-primary dark:hover:text-teal-400 font-semibold text-sm transition" href="home.html">Home</a>
         <a class="text-gray-600 dark:text-gray-300 hover:text-teal-primary dark:hover:text-teal-400 font-semibold text-sm transition" href="index.html#about">About Doctor</a>
         <a class="text-gray-600 dark:text-gray-300 hover:text-teal-primary dark:hover:text-teal-400 font-semibold text-sm transition" href="index.html#specialties">Specialities</a>
         <a class="text-teal-primary font-bold text-sm border-b-2 border-teal-primary pb-1" href="video.html">Video Consultation</a>
@@ -113,7 +114,7 @@
         </button>
       </div>
       <div class="flex flex-col gap-5 text-lg font-medium">
-        <a class="text-gray-600 dark:text-gray-300 hover:text-teal-primary dark:hover:text-teal-400 pl-3 transition" href="index.html">Home</a>
+        <a class="text-gray-600 dark:text-gray-300 hover:text-teal-primary dark:hover:text-teal-400 pl-3 transition" href="home.html">Home</a>
         <a class="text-gray-600 dark:text-gray-300 hover:text-teal-primary dark:hover:text-teal-400 pl-3 transition" href="index.html#about">About Doctor</a>
         <a class="text-gray-600 dark:text-gray-300 hover:text-teal-primary dark:hover:text-teal-400 pl-3 transition" href="index.html#specialties">Specialities</a>
         <a class="text-teal-primary font-bold border-l-4 border-teal-primary pl-3" href="video.html">Video Consultation</a>
@@ -232,9 +233,9 @@
           <div class="bg-teal-primary text-white p-8 rounded-3xl text-center shadow-lg border border-teal-950/10">
             <h3 class="text-xl font-bold mb-2">Book Video Slot Now</h3>
             <p class="text-teal-100 text-xs leading-relaxed mb-6">Select a convenient 30-minute block for your natural consult.</p>
-            <a href="appointment.html" class="w-full text-center bg-white text-teal-primary py-4 rounded-xl font-bold text-sm transition hover:bg-teal-50 hover-scale shadow-md block">
-              Enter Appointment Flow
-            </a>
+            <button id="start-video-consult" class="w-full text-center bg-white text-teal-primary py-4 rounded-xl font-bold text-sm transition hover:bg-teal-50 hover-scale shadow-md block">
+              Start Video Consultation
+            </button>
           </div>
         </div>
       </div>
@@ -278,6 +279,50 @@
     </div>
   </footer>
   <!-- END: FooterCTA -->
+
+  <!-- BEGIN: Consent Modal -->
+  <div id="consent-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all duration-300">
+    <div class="bg-white dark:bg-[#111f1e] w-full max-w-xl rounded-3xl shadow-2xl overflow-hidden border border-teal-500/10 scale-95 transition-transform duration-300" id="consent-modal-content">
+      <div class="p-8 md:p-10">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="bg-teal-primary/10 p-3 rounded-2xl text-teal-primary">
+            <span class="material-symbols-outlined text-3xl">gavel</span>
+          </div>
+          <h3 class="text-2xl font-black text-teal-secondary dark:text-teal-400">Patient Consent Form</h3>
+        </div>
+        
+        <div class="space-y-4 max-h-60 overflow-y-auto pr-2 custom-scrollbar mb-8 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+          <p>By proceeding with this Video Consultation, I hereby acknowledge and agree to the following terms:</p>
+          <ul class="list-disc pl-5 space-y-2">
+            <li>I understand that this consultation is conducted remotely via video communication technology.</li>
+            <li>I consent to the collection and processing of my personal and health data for the purpose of this clinical consultation.</li>
+            <li>I agree that I am providing my complete and voluntary consent for this video consultation scheduling.</li>
+            <li>I understand that remote diagnosis has limitations compared to in-person clinical examinations.</li>
+            <li>I am responsible for providing accurate medical history to ensure safe and effective treatment.</li>
+            <li>All discussions and prescriptions will be kept strictly confidential as per clinical privacy standards.</li>
+          </ul>
+        </div>
+
+        <div class="space-y-6">
+          <label class="flex items-start gap-3 cursor-pointer group">
+            <div class="relative flex items-center mt-1">
+              <input type="checkbox" id="consent-checkbox" class="peer h-5 w-5 cursor-pointer appearance-none rounded border border-gray-300 bg-white checked:bg-teal-primary checked:border-teal-primary focus:outline-none transition-all"/>
+              <span class="material-symbols-outlined absolute text-white opacity-0 peer-checked:opacity-100 text-[16px] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">check</span>
+            </div>
+            <span class="text-sm font-bold text-gray-700 dark:text-gray-200 group-hover:text-teal-primary transition-colors">
+              I agree to the terms and provide my complete consent for this video consultation.
+            </span>
+          </label>
+
+          <div class="flex gap-4">
+            <button id="close-consent-modal" class="flex-1 py-4 rounded-2xl font-bold text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition">Cancel</button>
+            <button id="proceed-to-consult" disabled class="flex-[2] bg-teal-primary text-white py-4 rounded-2xl font-bold opacity-50 cursor-not-allowed transition-all shadow-lg hover:shadow-teal-900/20">Proceed to Schedule</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END: Consent Modal -->
 
   <!-- JavaScript Modules -->
   <script src="app.js"></script>

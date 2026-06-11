@@ -1,11 +1,21 @@
 /* Global Website Logic & Appointment Scheduler State Manager */
 
+// Socket Connection to Doctor Dashboard Backend
+let socket;
+try {
+  socket = io('http://localhost:5000');
+  console.log('Connected to consultation notification bridge');
+} catch (e) {
+  console.warn('Socket.io not found, continuing in offline mode');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initScrollReveal();
   initMobileMenu();
   initTestimonialSlider();
   initBookingFlow();
+  initConsentModal();
 });
 
 /* ==========================================================================
@@ -416,4 +426,80 @@ function initBookingFlow() {
 
   // Set initial text values in summary
   updateSummary();
+}
+
+/* ==========================================================================
+   6. Video Consultation Consent Modal
+   ========================================================================== */
+function initConsentModal() {
+  const modal = document.getElementById('consent-modal');
+  const modalContent = document.getElementById('consent-modal-content');
+  const openBtns = document.querySelectorAll('#start-video-consult');
+  const closeBtn = document.getElementById('close-consent-modal');
+  const checkbox = document.getElementById('consent-checkbox');
+  const proceedBtn = document.getElementById('proceed-to-consult');
+
+  if (!modal || !checkbox || !proceedBtn) return;
+
+  const toggleModal = (show) => {
+    if (show) {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      setTimeout(() => {
+        if (modalContent) {
+          modalContent.classList.remove('scale-95');
+          modalContent.classList.add('scale-100');
+        }
+      }, 10);
+    } else {
+      if (modalContent) {
+        modalContent.classList.remove('scale-100');
+        modalContent.classList.add('scale-95');
+      }
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }, 300);
+    }
+  };
+
+  openBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      toggleModal(true);
+    });
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => toggleModal(false));
+  }
+
+  // Close on backdrop click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) toggleModal(false);
+  });
+
+  checkbox.addEventListener('change', () => {
+    if (checkbox.checked) {
+      proceedBtn.removeAttribute('disabled');
+      proceedBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      proceedBtn.classList.add('hover:bg-teal-secondary', 'hover:-translate-y-0.5');
+    } else {
+      proceedBtn.setAttribute('disabled', 'true');
+      proceedBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      proceedBtn.classList.remove('hover:bg-teal-secondary', 'hover:-translate-y-0.5');
+    }
+  });
+
+  proceedBtn.addEventListener('click', () => {
+    if (checkbox.checked) {
+      // Notify doctor's dashboard via socket
+      if (socket && socket.connected) {
+        socket.emit('patient-request-consultation', {
+          name: 'Patient Viewing Site', // Ideally we'd have a name from a form here
+          requestedAt: new Date().toLocaleTimeString()
+        });
+      }
+      window.location.href = 'appointment.html';
+    }
+  });
 }

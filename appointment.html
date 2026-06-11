@@ -6,6 +6,7 @@
   <title>Book Appointment - Dr. Varsha Bandi's Homeopathy</title>
   
   <!-- Tailwind CSS & Icon Fonts -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   
@@ -60,7 +61,7 @@
   <header class="sticky top-0 z-50 glass-panel shadow-[0_4px_30px_rgba(8,107,106,0.03)] border-b border-[#086b6a]/10">
     <nav class="max-w-7xl mx-auto px-4 md:px-10 py-4 flex justify-between items-center">
       <!-- Logo -->
-      <a href="index.html" class="flex items-center gap-3 group" data-purpose="logo">
+      <a href="home.html" class="flex items-center gap-3 group" data-purpose="logo">
         <div class="relative w-11 h-11 bg-white rounded-xl shadow-inner border border-teal-100 flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-105">
           <img alt="Dr. Varsha Bandi Logo" class="h-10 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDe68SlGmD9lamoEBpSR190TzURLMwPjMI8DpPVjzNAOH-YdjfDie4SFW2hej50y7DYKuwHn3o1TJNzL3kRfgi0S1dZc7do9R_trNFYWckUechGXqL0PGj5Qfxio1ekV54UlmpC_aTifK9L_xvqWUj4uQQQt8d0ErSzWf_gBmEpqC2lLl4h-33wAaMTYm_FH1V3jO41l7bsmI7yTINm1Uax6Mxh63jtZwvgiyoAbwhAt8T-GmBqGgWHK4bHfqhXI1zkZHhOrGMXAqOm" style="object-position: 0 0; clip-path: inset(20px 850px 850px 40px); transform: scale(1.8) translate(8px, 8px);"/>
         </div>
@@ -72,7 +73,7 @@
       
       <!-- Desktop Nav Menu Links -->
       <div class="hidden lg:flex items-center gap-8">
-        <a class="text-gray-600 dark:text-gray-300 hover:text-teal-primary dark:hover:text-teal-400 font-semibold text-sm transition" href="index.html">Home</a>
+        <a class="text-gray-600 dark:text-gray-300 hover:text-teal-primary dark:hover:text-teal-400 font-semibold text-sm transition" href="home.html">Home</a>
         <a class="text-gray-600 dark:text-gray-300 hover:text-teal-primary dark:hover:text-teal-400 font-semibold text-sm transition" href="index.html#about">About Doctor</a>
         <a class="text-gray-600 dark:text-gray-300 hover:text-teal-primary dark:hover:text-teal-400 font-semibold text-sm transition" href="index.html#specialties">Specialities</a>
         <a class="text-gray-600 dark:text-gray-300 hover:text-teal-primary dark:hover:text-teal-400 font-semibold text-sm transition" href="video.html">Video Consultation</a>
@@ -113,7 +114,7 @@
         </button>
       </div>
       <div class="flex flex-col gap-5 text-lg font-medium">
-        <a class="text-gray-600 dark:text-gray-300 hover:text-teal-primary dark:hover:text-teal-400 pl-3 transition" href="index.html">Home</a>
+        <a class="text-gray-600 dark:text-gray-300 hover:text-teal-primary dark:hover:text-teal-400 pl-3 transition" href="home.html">Home</a>
         <a class="text-gray-600 dark:text-gray-300 hover:text-teal-primary dark:hover:text-teal-400 pl-3 transition" href="index.html#about">About Doctor</a>
         <a class="text-gray-600 dark:text-gray-300 hover:text-teal-primary dark:hover:text-teal-400 pl-3 transition" href="index.html#specialties">Specialities</a>
         <a class="text-gray-600 dark:text-gray-300 hover:text-teal-primary dark:hover:text-teal-400 pl-3 transition" href="video.html">Video Consultation</a>
