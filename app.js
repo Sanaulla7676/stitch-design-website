@@ -382,6 +382,39 @@ function initBookingFlow() {
     confirmBtn.addEventListener('click', () => {
       if (!validateStep(3)) return;
       
+      // Send appointment to Backend DB
+      fetch('http://localhost:5000/api/public/book', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: bookingState.name,
+          email: bookingState.email,
+          phone: bookingState.phone,
+          service: bookingState.service,
+          date: bookingState.date,
+          timeSlot: bookingState.timeSlot,
+          fee: bookingState.fee
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          console.log('Appointment successfully recorded in dashboard:', data.appointmentId);
+          // Notify doctor via existing socket connection if available
+          if (socket && socket.connected) {
+            socket.emit('patient-request-consultation', {
+              name: bookingState.name,
+              requestedAt: new Date().toLocaleTimeString()
+            });
+          }
+        } else {
+          console.error('Failed to record appointment:', data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error booking appointment:', error);
+      });
+
       // Trigger a gorgeous success modal overlay
       const modal = document.createElement('div');
       modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md transition-opacity duration-300';
