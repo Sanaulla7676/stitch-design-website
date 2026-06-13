@@ -2,11 +2,15 @@
 
 // Socket Connection to Doctor Dashboard Backend
 let socket;
+const LIVE_BACKEND_URL = 'https://homeopathway-backend.onrender.com';
+const LOCAL_BACKEND_URL = 'http://localhost:5000';
+const SOCKET_URL = (window.location.hostname.includes('vercel.app') ? LIVE_BACKEND_URL : LOCAL_BACKEND_URL);
+
 try {
-  socket = io('http://localhost:5000');
-  console.log('Connected to consultation notification bridge');
+  socket = io(SOCKET_URL);
+  console.log(`Connected to consultation notification bridge at ${SOCKET_URL}`);
 } catch (e) {
-  console.warn('Socket.io not found, continuing in offline mode');
+  console.warn('Socket.io not found or server offline, continuing in offline mode');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -382,8 +386,17 @@ function initBookingFlow() {
     confirmBtn.addEventListener('click', () => {
       if (!validateStep(3)) return;
       
+      // Dynamic Backend Configuration
+      const LIVE_BACKEND_URL = 'https://homeopathway-backend.onrender.com';
+      const LOCAL_BACKEND_URL = 'http://localhost:5000';
+      
+      // Determine which API to use (prefer live if on vercel, otherwise local)
+      const API_URL = window.location.hostname.includes('vercel.app') 
+        ? LIVE_BACKEND_URL 
+        : LOCAL_BACKEND_URL;
+
       // Send appointment to Backend DB
-      fetch('http://localhost:5000/api/public/book', {
+      fetch(`${API_URL}/api/public/book`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
